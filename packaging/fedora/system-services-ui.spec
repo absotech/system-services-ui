@@ -3,8 +3,8 @@ Version:        0.1.0
 Release:        1%{?dist}
 Summary:        Web UI for managing systemd services
 
-License:        GPL-2.0-or-later
-URL:            https://github.com/yourname/system-services-ui
+License:        GPL-3.0-or-later
+URL:            https://github.com/absotech/system-services-ui
 Source0:        %{name}-%{version}.tar.gz
 
 BuildRequires:  golang
@@ -25,7 +25,8 @@ getent passwd system-services-ui >/dev/null || \
 %autosetup
 
 %build
-go build -v -o system-services-ui ./cmd/system-services-ui
+export LDFLAGS="-X main.version=%{version} -B 0x$(head -c20 /dev/urandom | od -An -tx1 | tr -d ' \n')"
+go build -mod=vendor -v -ldflags "$LDFLAGS" -o %{name} ./cmd/%{name}
 
 %install
 install -Dm0755 system-services-ui \
