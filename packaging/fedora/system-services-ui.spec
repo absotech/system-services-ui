@@ -8,6 +8,7 @@ URL:            https://github.com/absotech/system-services-ui
 Source0:        %{name}-%{version}.tar.gz
 
 BuildRequires:  golang
+BuildRequires:  systemd-rpm-macros
 Requires:       systemd
 Requires:       polkit
 
@@ -23,6 +24,7 @@ getent passwd system-services-ui >/dev/null || \
 
 %prep
 %autosetup
+find vendor -name "*.go" -exec chmod -x {} +
 
 %build
 export LDFLAGS="-X main.version=%{version} -B 0x$(head -c20 /dev/urandom | od -An -tx1 | tr -d ' \n')"

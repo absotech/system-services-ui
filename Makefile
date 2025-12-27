@@ -29,6 +29,7 @@ archive:
 	go mod vendor
 	mkdir -p dist/$(DIST_NAME)
 	git archive --format=tar HEAD | tar -x -C dist/$(DIST_NAME)
+	cp -r vendor dist/$(DIST_NAME)/
 	tar -czf $(DIST_NAME).tar.gz -C dist $(DIST_NAME)
 	rm -rf dist/
 	@echo "Archive created: $(DIST_NAME).tar.gz"
