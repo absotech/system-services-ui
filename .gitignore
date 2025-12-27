@@ -12,6 +12,7 @@
 /system-services-ui
 /bin/
 /dist/
+/vendor/
 
 go.work
 go.work.sum
