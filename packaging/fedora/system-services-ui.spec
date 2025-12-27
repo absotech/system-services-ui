@@ -55,5 +55,5 @@ install -Dm0644 packaging/fedora/50-system-services-ui.rules \
 %{_datadir}/polkit-1/rules.d/50-system-services-ui.rules
 
 %changelog
-* Thu Mar 14 2025 Andrei Ivan <contact@andreiivan.com> - 0.1.0-1
+* Sat Dec 27 2025 Andrei Ivan <contact@andreiivan.com> - 0.1.0-1
 - Initial Fedora package

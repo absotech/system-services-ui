@@ -26,13 +26,10 @@ test:
 
 ## archive: Create the source tarball for Fedora packaging
 archive:
-	# Create a temporary directory to structure the tarball correctly
+	go mod vendor
 	mkdir -p dist/$(DIST_NAME)
-	# Copy all tracked git files to the dist directory
 	git archive --format=tar HEAD | tar -x -C dist/$(DIST_NAME)
-	# Create the tar.gz
 	tar -czf $(DIST_NAME).tar.gz -C dist $(DIST_NAME)
-	# Clean up temp dir
 	rm -rf dist/
 	@echo "Archive created: $(DIST_NAME).tar.gz"
 
