@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Server Manager</title>
+    <link rel="stylesheet" href="index.css" />
+    <script defer src="app.js"></script>
+    <script defer src="alpine.min.js"></script>
+
+</head>
+
+<body x-data="app()">
+
+    <header>
+        <strong>Server Manager</strong>
+    </header>
+
+    <div class="container">
+
+        <!-- Server status -->
+        <div class="card">
+            <div class="row">
+                <div>
+                    <div>Server</div>
+                    <small x-text="serverUrl"></small>
+                </div>
+                <div>
+                    <span class="dot" :class="connected ? 'dot-ok' : 'dot-bad'"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services -->
+        <div class="columns">
+            <template x-for="svc in services" :key="svc.service">
+                <div class="card">
+                    <div><strong x-text="svc.service"></strong></div>
+                    <small>Status</small>
+                    <div>
+                        <span class="dot" :class="svc.running ? 'dot-ok' : 'dot-bad'"></span>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Actions -->
+        <div class="card">
+            <div class="row">
+                <button @click="fetchAll()">Refresh system</button>
+                <button @click="restartService('nginx')">Restart nginx</button>
+            </div>
+        </div>
+
+        <!-- System info -->
+        <div class="card">
+            <div><strong>System</strong></div>
+
+            <small>Uptime</small>
+            <div x-text="system.uptime || '-'"></div>
+
+            <small>Load</small>
+            <div x-text="system.load || '-'"></div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

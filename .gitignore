@@ -1,0 +1,75 @@
+# =====================
+# Go
+# =====================
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+/system-services-ui
+/bin/
+/dist/
+
+go.work
+go.work.sum
+
+*.cover
+coverage.out
+*.prof
+
+# =====================
+# Frontend (static)
+# =====================
+/node_modules/
+/npm-debug.log*
+/yarn-debug.log*
+/yarn-error.log*
+/pnpm-debug.log*
+
+# =====================
+# IDEs
+# =====================
+
+.idea/
+*.iml
+
+.vscode/
+
+# =====================
+# OS / Editor noise
+# =====================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# =====================
+# Logs & runtime data
+# =====================
+*.log
+/run/
+/tmp/
+
+# =====================
+# Packaging build output
+# =====================
+*.tar.gz
+BUILD/
+BUILDROOT/
+RPMS/
+SOURCES/*.tar.gz
+SPECS/*.spec.rpm
+SRPMS/
+
+# =====================
+# Security / secrets
+# =====================
+*.key
+*.pem
+*.crt
+.env
+.env.*

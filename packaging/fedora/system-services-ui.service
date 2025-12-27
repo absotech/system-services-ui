@@ -1,0 +1,33 @@
+[Unit]
+Description=System Services UI
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=system-services-ui
+Group=system-services-ui
+ExecStart=/usr/bin/system-services-ui
+Restart=on-failure
+RestartSec=3
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictRealtime=true
+MemoryDenyWriteExecute=true
+
+# Allow systemctl via polkit
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+[Install]
+WantedBy=multi-user.target
