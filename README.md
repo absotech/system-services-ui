@@ -13,4 +13,4 @@ Designed to run on trusted networks (e.g. behind VPN).
 Authorization for systemd actions is enforced via polkit.
 
 ## License
-MIT
+GPL-3.0
