@@ -7,7 +7,7 @@ function app() {
 
         async fetchSystem() {
             try {
-                const res = await fetch('/api/system', { cache: 'no-store' });
+                const res = await fetch('/api/v1/system', { cache: 'no-store' });
                 this.system = await res.json();
                 this.serverUrl = this.system.hostname;
             } catch (e) {
@@ -17,7 +17,7 @@ function app() {
 
         async fetchServices() {
             try {
-                const res = await fetch('/api/services/status', { cache: 'no-store' });
+                const res = await fetch('/api/v1/services/status', { cache: 'no-store' });
                 const data = await res.json();
                 this.services = data.services;
             } catch (e) {
@@ -40,7 +40,7 @@ function app() {
         async restartService(name) {
             if (!confirm(`Restart ${name}?`)) return;
             try {
-                await fetch(`/api/services/${name}/restart`, { method: 'POST' });
+                await fetch(`/api/v1/services/${name}/restart`, { method: 'POST' });
                 await this.fetchServices();
             } catch (e) {
                 alert("Failed to restart service");
