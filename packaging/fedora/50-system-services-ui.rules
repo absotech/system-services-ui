@@ -12,15 +12,12 @@ polkit.addRule(function(action, subject) {
         return;
     }
 
-    var allowed = [
-        "nginx.service",
-        "parrtyapp.service",
-        "ivantravel.service",
-        "transport-worker.service",
-        "budgetplanner.service",
-    ];
-
-    if (allowed.indexOf(unit) >= 0) {
-        return polkit.Result.YES;
+    try {
+        polkit.spawn(["/usr/bin/system-services-ui", "check-unit", unit]);
+    } catch (e) {
+        // Non-zero exit: unit not allowed, fall through.
+        return;
     }
+
+    return polkit.Result.YES;
 });

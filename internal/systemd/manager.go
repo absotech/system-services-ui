@@ -7,11 +7,11 @@ import (
 )
 
 func unit(name string) string {
-	return name + ".service"
+	return name + unitSuffix
 }
 
 func Restart(name string) error {
-	if !AllowedServices[name] {
+	if !IsAllowed(name) {
 		return errors.New("service not allowed")
 	}
 
@@ -20,7 +20,7 @@ func Restart(name string) error {
 }
 
 func Status(name string) (enabled bool, running bool, err error) {
-	if !AllowedServices[name] {
+	if !IsAllowed(name) {
 		return false, false, errors.New("service not allowed")
 	}
 
@@ -44,9 +44,5 @@ func Status(name string) (enabled bool, running bool, err error) {
 }
 
 func List() []string {
-	services := make([]string, 0, len(AllowedServices))
-	for s := range AllowedServices {
-		services = append(services, s)
-	}
-	return services
+	return allowedList()
 }

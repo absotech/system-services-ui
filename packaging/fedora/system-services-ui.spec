@@ -40,6 +40,9 @@ install -Dm0644 packaging/fedora/system-services-ui.service \
 install -Dm0644 packaging/fedora/50-system-services-ui.rules \
     %{buildroot}%{_datadir}/polkit-1/rules.d/50-system-services-ui.rules
 
+install -Dm0644 internal/config/system-services-ui.yaml \
+    %{buildroot}%{_sysconfdir}/system-services-ui/system-services-ui.yaml
+
 %post
 %systemd_post system-services-ui.service
 
@@ -55,6 +58,8 @@ install -Dm0644 packaging/fedora/50-system-services-ui.rules \
 %{_bindir}/system-services-ui
 %{_unitdir}/system-services-ui.service
 %{_datadir}/polkit-1/rules.d/50-system-services-ui.rules
+%dir %{_sysconfdir}/system-services-ui
+%config(noreplace) %attr(0644,root,root) %{_sysconfdir}/system-services-ui/system-services-ui.yaml
 
 %changelog
 * Sat Dec 27 2025 Andrei Ivan <contact@andreiivan.com> - 0.1.0-1

@@ -1,3 +1,11 @@
 listen:
   address: "127.0.0.1"
   port: 8081
+
+# Services that may be viewed and restarted (without ".service").
+# Used by the web UI and by the polkit rule (via `system-services-ui check-unit`).
+# Restart system-services-ui after changing this list!!!
+services:
+  - nginx
+  - transport-worker
+  - budgetplanner

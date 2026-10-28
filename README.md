@@ -25,6 +25,21 @@ This tool is built with a **security-first** mindset:
 - **Polkit Authorization:** Does not run as root. Privileged actions are authorized via Polkit rules.
 - **Hardened for Fedora:** Ships with Polkit `.rules` and systemd `.service` files out of the box.
 
+### Allowed services
+
+The services that can be managed are listed in a single place, `/etc/system-services-ui/system-services-ui.yaml`:
+
+```yaml
+services:
+  - nginx
+  - budgetplanner
+```
+
+The web UI reads this list at startup, and the Polkit rule checks it by calling
+`/usr/bin/system-services-ui check-unit <unit>`, so the rule file never needs editing.
+After changing the list, run `sudo systemctl restart system-services-ui`.
+Keep the config file owned by `root` and not writable by the `system-services-ui` user.
+
 ---
 
 ## 📦 Installation & Deployment

@@ -7,7 +7,8 @@ import (
 )
 
 type Config struct {
-	Listen ListenConfig `yaml:"listen"`
+	Listen   ListenConfig `yaml:"listen"`
+	Services []string     `yaml:"services"`
 }
 
 type ListenConfig struct {

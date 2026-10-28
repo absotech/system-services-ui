@@ -14,11 +14,51 @@ import (
 	system_services_ui "system-services-ui"
 	"system-services-ui/internal/api"
 	"system-services-ui/internal/config"
+	"system-services-ui/internal/systemd"
 
 	"github.com/gin-gonic/gin"
 )
 
+// checkUnit is invoked by the polkit rule via polkit.spawn().
+// It exits 0 only if the given unit (e.g. "nginx.service") is in the config allowlist.
+func checkUnit(args []string) int {
+	if len(args) != 1 {
+		fmt.Fprintln(os.Stderr, "usage: system-services-ui check-unit <unit>")
+		return 2
+	}
+
+	cfg, err := config.Load(config.DefaultConfigPath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to load config: %v\n", err)
+		return 1
+	}
+
+	if err := systemd.SetAllowed(cfg.Services); err != nil {
+		fmt.Fprintf(os.Stderr, "invalid services config: %v\n", err)
+		return 1
+	}
+
+	if !systemd.IsAllowedUnit(args[0]) {
+		return 1
+	}
+	return 0
+}
+
 func main() {
+	if len(os.Args) > 1 && os.Args[1] == "check-unit" {
+		os.Exit(checkUnit(os.Args[2:]))
+	}
+
+	// ---- Config ----
+	cfg, err := config.Load(config.DefaultConfigPath)
+	if err != nil {
+		log.Fatalf("failed to load config: %v", err)
+	}
+
+	if err := systemd.SetAllowed(cfg.Services); err != nil {
+		log.Fatalf("invalid services config: %v", err)
+	}
+
 	r := gin.New()
 	r.RedirectTrailingSlash = false
 	r.RedirectFixedPath = false
@@ -43,12 +83,6 @@ func main() {
 	{
 		ui.StaticFS("/", http.FS(sub))
 
-	}
-
-	// ---- Config ----
-	cfg, err := config.Load(config.DefaultConfigPath)
-	if err != nil {
-		log.Fatalf("failed to load config: %v", err)
 	}
 
 	addr := fmt.Sprintf("%s:%d", cfg.Listen.Address, cfg.Listen.Port)

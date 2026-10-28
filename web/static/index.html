@@ -4,68 +4,59 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home Server Manager</title>
+    <title>System Services</title>
     <link rel="stylesheet" href="index.css" />
     <script defer src="app.js"></script>
     <script defer src="alpine.min.js"></script>
-
 </head>
 
 <body x-data="app()">
-
-    <header>
-        <strong>Server Manager</strong>
+    <header class="bar">
+        <strong class="host" x-text="serverUrl || 'System Services'"></strong>
+        <span class="meta">up <span x-text="(system.uptime || '—').replace(/^up\s+/, '')"></span></span>
+        <span class="meta">load <span x-text="loadAverage"></span></span>
+        <span class="spacer"></span>
+        <span class="meta" x-show="lastUpdated" x-text="lastUpdated ? lastUpdated.toLocaleTimeString() : ''"></span>
+        <span class="conn" :class="loading ? '' : (connected ? 'ok' : 'bad')" x-text="connectionLabel"></span>
+        <button type="button" @click="fetchAll()" :disabled="refreshing">Refresh</button>
     </header>
 
-    <div class="container">
-
-        <!-- Server status -->
-        <div class="card">
-            <div class="row">
-                <div>
-                    <div>Server</div>
-                    <small x-text="serverUrl"></small>
-                </div>
-                <div>
-                    <span class="dot" :class="connected ? 'dot-ok' : 'dot-bad'"></span>
-                </div>
-            </div>
+    <main>
+        <div class="summary">
+            <span>Services</span>
+            <span class="meta" x-text="`${runningServices}/${services.length} running`"></span>
         </div>
 
-        <!-- Services -->
-        <div class="columns">
-            <template x-for="svc in services" :key="svc.service">
-                <div class="card">
-                    <div><strong x-text="svc.service"></strong></div>
-                    <small>Status</small>
-                    <div>
-                        <span class="dot" :class="svc.running ? 'dot-ok' : 'dot-bad'"></span>
-                    </div>
-                </div>
-            </template>
-        </div>
+        <p class="note" x-show="loading">Loading…</p>
+        <p class="note" x-show="!loading && !services.length" x-cloak>No services found.</p>
 
-        <!-- Actions -->
-        <div class="card">
-            <div class="row">
-                <button @click="fetchAll()">Refresh system</button>
-                <button @click="restartService('nginx')">Restart nginx</button>
-            </div>
-        </div>
+        <table x-show="!loading && services.length" x-cloak>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>State</th>
+                    <th>Boot</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="svc in services" :key="svc.name">
+                    <tr>
+                        <td class="name" x-text="svc.name" :title="svc.name"></td>
+                        <td>
+                            <span class="state" :class="svc.running ? 'ok' : 'bad'" x-text="svc.running ? 'running' : 'stopped'"></span>
+                        </td>
+                        <td class="dim" x-text="svc.enabled ? 'enabled' : 'disabled'"></td>
+                        <td class="actions">
+                            <button type="button" @click="restartService(svc.name)" :disabled="restartingService === svc.name" x-text="restartingService === svc.name ? 'Restarting…' : 'Restart'"></button>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </main>
 
-        <!-- System info -->
-        <div class="card">
-            <div><strong>System</strong></div>
-
-            <small>Uptime</small>
-            <div x-text="system.uptime || '-'"></div>
-
-            <small>Load</small>
-            <div x-text="system.load || '-'"></div>
-        </div>
-
-    </div>
-
+    <div class="toast" x-show="toast" x-cloak :class="toast ? toast.type : ''" x-text="toast?.message" role="status" aria-live="polite"></div>
 </body>
 
 </html>
